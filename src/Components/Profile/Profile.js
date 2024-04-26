@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
 import { SharedData } from '../SharedData/SharedContext';
+import useTitle from '../CustomHook/useTitle/useTitle';
 
 const Profile = () => {
+    useTitle("Profile- Library");
     const { user } = useContext(SharedData);
     return (
         <div className='container-fluid'>

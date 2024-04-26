@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLoaderData, useNavigate, useSearchParams } from 'react-router-dom';
+import useTitle from '../CustomHook/useTitle/useTitle';
 
 const SpecificCategory = () => {
+    useTitle("Specific category- Library");
     const [searchParams, setSearchParams] = useSearchParams();
     const [allBook, setAllBook] = useState([]);
     const navigate = useNavigate();
