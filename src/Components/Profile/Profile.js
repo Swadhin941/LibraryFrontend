@@ -19,6 +19,15 @@ const Profile = () => {
                         <h6>Email: {user?.email}</h6>
                     </div>
                 </div>
+                <div className="col-12 col-md-12 col-lg-12">
+                    <h5>History</h5>
+                    <hr />
+                </div>
+                <div className="col-12 col-md-12 col-lg-12">
+                    <div className='d-flex justify-content-center align-items-center' style={{ height: "300px", width: "100%", backgroundColor: "#C9CCCE" }}>
+                        <h3 className='text-white fw-bold'>No Data</h3>
+                    </div>
+                </div>
             </div>
         </div>
     );
