@@ -12,6 +12,8 @@ import AddBooks from './Components/AddBooks/AddBooks';
 import PrivateRoute from './Components/PrivateRoutes/PrivateRoute';
 import WishList from './Components/WishList/WishList';
 import Cart from './Components/Cart/Cart';
+import SpecificCategory from './Components/SpecificCategory/SpecificCategory';
+import BookDetails from './Components/BookDetails/BookDetails';
 
 function App() {
   const router = createBrowserRouter([
@@ -47,6 +49,14 @@ function App() {
         {
           path: "/cart",
           element: <PrivateRoute><Cart></Cart></PrivateRoute>
+        },
+        {
+          path: "/specific-category",
+          element: <SpecificCategory></SpecificCategory>
+        },
+        {
+          path: "/book-details",
+          element: <BookDetails></BookDetails>
         }
       ]
     }

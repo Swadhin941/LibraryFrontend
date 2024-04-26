@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import useTitle from '../CustomHook/useTitle/useTitle';
 import toast from 'react-hot-toast';
 import ClockLoader from 'react-spinners/ClockLoader';
+import useAxiosSecure from '../CustomHook/useAxiosSecure/useAxiosSecure';
+import { SharedData } from '../SharedData/SharedContext';
 
 const AddBooks = () => {
     useTitle('AddBooks- Library');
+    const {user}= useContext(SharedData);
     const [allCategory, setAllCategory] = useState([]);
     const [dataLoading, setDataLoading] = useState(false);
     const [tempImg, setTempImg] = useState(null);
+    const [isPremium, setIsPremium] = useState("Free");
     const [tempFile, setTempFile] = useState(null);
+    const [axiosSecure] = useAxiosSecure();
+
 
     useEffect(() => {
         fetch(`${process.env.REACT_APP_SERVER}/allCategory`)
@@ -30,14 +36,72 @@ const AddBooks = () => {
         const writer = form.writer.value;
         const isbn = form.isbn.value;
         const category = form.category.value;
-        if(category==="default"){
+        if (category === "default") {
             toast.error("Please select a category");
             return;
         }
         const edition = form.edition.value;
         const quantities = form.availableQuantities.value;
+        let price;
+        let uploadPost = {};
+        if (isPremium === "Free") {
+            console.log("Without price");
+            uploadPost= {
+                title, edition, writer, isbn, category, quantities, isPremium: false
+            };
+
+        }
+        else {
+            price = form.price.value;
+            uploadPost = {
+                title, edition, writer, isbn, category, quantities, isPremium: true,
+                price: price
+            };
+        }
         
-        
+        console.log(uploadPost);
+
+        const formData1 = new FormData();
+        formData1.append("image", tempImg)
+        fetch(`https://api.imgbb.com/1/upload?key=${process.env.REACT_APP_imgBB}`, {
+            method: "POST",
+            body: formData1
+        })
+            .then(res => res.json())
+            .then(imgData => {
+                console.log(imgData);
+                if(imgData.success){
+                    const formData2 = new FormData();
+                    formData2.append("file", tempFile);
+                    formData2.append("upload_preset", process.env.REACT_APP_upload_preset);
+                    formData2.append("cloud_name", process.env.REACT_APP_cloud_name);
+                    fetch(`https://api-eu.cloudinary.com/v1_1/${process.env.REACT_APP_cloud_name}/image/upload`, {
+                        method: "POST",
+                        body: formData2
+                    })
+                    .then(res=>res.json())
+                    .then(fileData=>{
+                        if(fileData?.url){
+                            uploadPost= {...uploadPost, image: imgData?.data?.url, pdf: fileData?.url}
+                            axiosSecure.post(`/uploadBook?user=${user?.email}`, uploadPost)
+                            .then(res=>res.data)
+                            .then(data=>{
+                                if(data.acknowledged===true){
+                                    // form.reset();
+                                    toast.success("Book added successfully");
+                                    return;
+                                }
+                                else{
+                                    toast.error(data.message);
+                                }
+                            })
+                            .catch(error=>{
+                                toast.error(error.message);
+                            })
+                        }
+                    })
+                }
+            })
     }
 
     const handleImageChange = e => {
@@ -49,7 +113,7 @@ const AddBooks = () => {
             toast.error("Image file should be in png, jpg or jpeg format only");
             return;
         }
-        
+
     }
 
     const handlePdfChange = (e) => {
@@ -66,8 +130,12 @@ const AddBooks = () => {
         }
     }
 
+    const handleStatus = value => {
+        setIsPremium(value);
+    }
+
     return (
-        <div className='container-fluid d-flex justify-content-center align-items-center' style={{ height: "150vh" }}>
+        <div className='container-fluid d-flex justify-content-center align-items-center' style={{ height: "170vh" }}>
             <div className="card" style={{ width: "40%" }}>
                 <div className="card-body">
                     <h2 className='text-center fw-bold'>Add Book</h2>
@@ -131,14 +199,40 @@ const AddBooks = () => {
                         <input type="file" name='uploadImg' className='uploadImg' hidden onChange={handleImageChange} />
                         <div className='mt-2'>
                             <label htmlFor="Premium">Book status:</label>
-                            <div className='input-group'>
-                                <input type="checkbox" name='status' className='status form-checkbox' />
+                            <div className="d-flex">
+                                <input type="radio" name="status" className='form-check-input' id="status" onClick={() => handleStatus("Free")} defaultChecked />
+                                <div className='ms-2'>
+                                    <label htmlFor="status">Free</label>
+                                </div>
                             </div>
+                            <div className="d-flex">
+                                <input type="radio" name="status" className='form-check-input' id="status" onClick={() => handleStatus("Premium")} />
+                                <div className='ms-2'>
+                                    <label htmlFor="status">Premium</label>
+                                </div>
+                            </div>
+
                         </div>
+                        {
+                            isPremium === "Premium" && <div className='mt-2'>
+                                <label htmlFor="price">Price:</label>
+                                <div className="input-group">
+                                    <input type="text" className='form-control' name='price' id="price" placeholder='Enter book price' required />
+                                </div>
+                            </div>
+                        }
                         <div className='mt-2'>
                             <label htmlFor="pdfUpload">Upload pdf:</label>
                             <div className='mt-1'>
                                 <input type="file" name='pdfUpload' id='pdfUpload' className='form-control' onChange={handlePdfChange} />
+                            </div>
+                        </div>
+                        <div className='mt-2'>
+                            <label htmlFor="description">Description:</label>
+                            <div className="input-group">
+                                <textarea name="description" id="description" className='form-control' style={{resize:"none"}} required placeholder='Enter book description'>
+
+                                </textarea>
                             </div>
                         </div>
                         <div className='mt-2'>

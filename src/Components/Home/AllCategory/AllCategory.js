@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const AllCategory = () => {
     const [allCategory, setAllCategory]= useState([]);
     const [limit, setLimit]= useState(true);
     const [allData, setAllData]= useState([]);
+    const navigate = useNavigate();
+
     useEffect(()=>{
         fetch(`${process.env.REACT_APP_SERVER}/allCategory`)
         .then(res=>res.json())
@@ -39,7 +42,7 @@ const AllCategory = () => {
                 </div>
                 {
                     allCategory.map((item, index)=><div className='col-6 col-sm-4 col-md-3 col-lg-2' key={index}>
-                        <div className="card" style={{cursor:"pointer"}}>
+                        <div className="card" style={{cursor:"pointer"}} onClick={()=>navigate(`/specific-category?category=${item?.name}`)}>
                             <div className="card-body">
                                 <h6 style={{fontSize: item?.name.length <=15?"17px": "15px"}}>{item?.name}</h6>
                             </div>
