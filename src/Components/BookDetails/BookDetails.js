@@ -15,6 +15,7 @@ const BookDetails = () => {
         fetch(`${process.env.REACT_APP_SERVER}/bookDetails/${searchParams.get("id")}?user=${user?.email}`)
             .then(res => res.json())
             .then(data => {
+                console.log(data);
                 setBookData(data);
             })
             .catch(error=>{

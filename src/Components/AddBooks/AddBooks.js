@@ -42,6 +42,7 @@ const AddBooks = () => {
         }
         const edition = form.edition.value;
         const quantities = form.availableQuantities.value;
+        const description = form.description.value;
         let price;
         let uploadPost = {};
         if (isPremium === "Free") {
@@ -82,7 +83,7 @@ const AddBooks = () => {
                     .then(res=>res.json())
                     .then(fileData=>{
                         if(fileData?.url){
-                            uploadPost= {...uploadPost, image: imgData?.data?.url, pdf: fileData?.url}
+                            uploadPost= {...uploadPost, image: imgData?.data?.url, pdf: fileData?.url, description}
                             axiosSecure.post(`/uploadBook?user=${user?.email}`, uploadPost)
                             .then(res=>res.data)
                             .then(data=>{

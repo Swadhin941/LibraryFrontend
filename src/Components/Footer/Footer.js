@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import "./Footer.css";
 import NavLinks from '../CustomComponents/NavLinks/NavLinks';
 import { Link } from 'react-router-dom';
+import { SharedData } from '../SharedData/SharedContext';
 
 const Footer = () => {
+    const { user } = useContext(SharedData);
     const navLinks = NavLinks();
     const locations = [
         {
@@ -34,10 +36,25 @@ const Footer = () => {
                         <div>
                             <h5 className='fw-bold'>Quick Links</h5>
                             {
-                                navLinks.map((item, index) => <div className='my-3' key={index}>
-                                    <i className='bi bi-arrow-right text-success me-2 fw-bold'></i>
-                                    <Link to={item.path} style={{ textDecoration: "none", color: "black", fontWeight: "600" }}>{item.name}</Link>
-                                </div>)
+                                navLinks.map((item, index) => {
+                                    if (user?.role === "admin" && item?.name === 'Add-Books'){
+                                        return(
+                                            <div className='my-3' key={index}>
+                                                <i className='bi bi-arrow-right text-success me-2 fw-bold'></i>
+                                                <Link to={item.path} style={{ textDecoration: "none", color: "black", fontWeight: "600" }}>{item.name}</Link>
+                                            </div>
+                                        )
+                                    }
+                                    else if (item?.name !== "Add-Books"){
+                                        return(
+                                            <div className='my-3' key={index}>
+                                                <i className='bi bi-arrow-right text-success me-2 fw-bold'></i>
+                                                <Link to={item.path} style={{ textDecoration: "none", color: "black", fontWeight: "600" }}>{item.name}</Link>
+                                            </div>
+                                        )
+                                    }
+                                    
+                                })
                             }
                         </div>
                         <div>
@@ -45,7 +62,7 @@ const Footer = () => {
                             {
                                 locations.map((item, index) => <div className='my-3 d-flex' key={index}>
                                     <i className='bi bi-geo-alt-fill text-success fw-bold me-3 fs-4'></i>
-                                    <h6 className='mt-2' style={{fontWeight:"600", cursor:"pointer"}}>{item.name}</h6>
+                                    <h6 className='mt-2' style={{ fontWeight: "600", cursor: "pointer" }}>{item.name}</h6>
                                 </div>)
                             }
                         </div>

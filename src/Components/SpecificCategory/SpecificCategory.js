@@ -15,6 +15,9 @@ const SpecificCategory = () => {
             .then(data => {
                 setAllBook(data);
             })
+            .catch(error=>{
+                
+            })
     }, [searchParams])
     return (
         <div className='container-fluid mt-3'>
