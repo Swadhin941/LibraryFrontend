@@ -60,8 +60,8 @@ const AddBooks = () => {
             };
         }
         
-        console.log(uploadPost);
 
+        setDataLoading(true);
         const formData1 = new FormData();
         formData1.append("image", tempImg)
         fetch(`https://api.imgbb.com/1/upload?key=${process.env.REACT_APP_imgBB}`, {
@@ -90,13 +90,16 @@ const AddBooks = () => {
                                 if(data.acknowledged===true){
                                     // form.reset();
                                     toast.success("Book added successfully");
+                                    setDataLoading(false);
                                     return;
                                 }
                                 else{
+                                    setDataLoading(false);
                                     toast.error(data.message);
                                 }
                             })
                             .catch(error=>{
+                                setDataLoading(false);
                                 toast.error(error.message);
                             })
                         }
@@ -237,7 +240,7 @@ const AddBooks = () => {
                             </div>
                         </div>
                         <div className='mt-2'>
-                            <button className='btn btn-primary w-100'>{dataLoading ? <ClockLoader size={24} color='white' /> : "Upload book"}</button>
+                            <button className='btn btn-primary w-100' disabled={dataLoading}>{dataLoading ? <ClockLoader size={24} color='white' /> : "Upload book"}</button>
                         </div>
                     </form>
                 </div>

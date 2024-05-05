@@ -14,6 +14,7 @@ import WishList from './Components/WishList/WishList';
 import Cart from './Components/Cart/Cart';
 import SpecificCategory from './Components/SpecificCategory/SpecificCategory';
 import BookDetails from './Components/BookDetails/BookDetails';
+import AdminRoute from './Components/PrivateRoutes/AdminRoute';
 
 function App() {
   const router = createBrowserRouter([
@@ -40,7 +41,7 @@ function App() {
         },
         {
           path: "/add-books",
-          element: <PrivateRoute><AddBooks></AddBooks></PrivateRoute>
+          element: <AdminRoute><AddBooks></AddBooks></AdminRoute>
         },
         {
           path: "/wishlist",
