@@ -28,7 +28,7 @@ const Footer = () => {
         }
     ]
     return (
-        <div className='container-fluid ps-0 pe-0 mt-3' style={{ backgroundColor: "#e5e5e5" }}>
+        <div className='container-fluid ps-0 pe-0 mt-3 pt-4' style={{ backgroundColor: "#e5e5e5" }}>
 
             <div className="row">
                 <div className="col-12 col-md-12 col-lg-12">

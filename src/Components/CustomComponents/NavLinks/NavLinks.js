@@ -7,6 +7,10 @@ const NavLinks= ()=>{
         {
             name: "Add-Books",
             path: "/add-books",
+        },
+        {
+            name: "Blogs",
+            path: "/blogs"
         }
     ];
     return links;

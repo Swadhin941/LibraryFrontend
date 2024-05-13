@@ -15,6 +15,8 @@ import Cart from './Components/Cart/Cart';
 import SpecificCategory from './Components/SpecificCategory/SpecificCategory';
 import BookDetails from './Components/BookDetails/BookDetails';
 import AdminRoute from './Components/PrivateRoutes/AdminRoute';
+import Blogs from './Components/Blogs/Blogs';
+import BlogDetails from './Components/BlogDetails/BlogDetails';
 
 function App() {
   const router = createBrowserRouter([
@@ -37,7 +39,7 @@ function App() {
         },
         {
           path: "/profile",
-          element: <Profile></Profile>
+          element: <PrivateRoute><Profile></Profile></PrivateRoute>
         },
         {
           path: "/add-books",
@@ -58,6 +60,14 @@ function App() {
         {
           path: "/book-details",
           element: <BookDetails></BookDetails>
+        },
+        {
+          path: "/blogs",
+          element: <Blogs></Blogs>
+        },
+        {
+          path: "/blog-details",
+          element: <BlogDetails></BlogDetails>
         }
       ]
     }
